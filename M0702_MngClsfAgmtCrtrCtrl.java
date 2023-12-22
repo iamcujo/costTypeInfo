@@ -168,7 +168,7 @@ public class M0702_MngClsfAgmtCrtrCtrl {
 	    return handleClassCdListRequest(paramMap, "selectClassCd4List");
 	}
 	
-	@PostMapping
+	@RequestMapping(value = "saveCostTypeItem.do")
 	    public ResponseEntity<Object> saveCostTypeItem(@RequestBody KccgMap paramMap, HttpServletRequest request) {
 	        HttpSession session = request.getSession();
 	        KccgMap userInfo = (KccgMap) session.getAttribute("kccgErpUserMap");
