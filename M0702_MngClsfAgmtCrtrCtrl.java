@@ -168,23 +168,26 @@ public class M0702_MngClsfAgmtCrtrCtrl {
 	    return handleClassCdListRequest(paramMap, "selectClassCd4List");
 	}
 	
-	@RequestMapping(value = "/saveCostTypeItem.do")
-	public ModelAndView saveCostTypeItem(@RequestBody KccgMap paramMap) {
-	    ModelAndView mav = createJsonModelAndView();
-	    List<KccgMap> list = (List<KccgMap>) paramMap.get("dsCostTypeList");
-
-	    try {
-	        KccgMap resultMap = service.saveCostTypeItem(list);
-	        mav.addObject("result", resultMap);
-	        addSuccessResponse(mav);
-	        return mav;
-	    } catch (RuntimeException e) {
-	        logger.error("saveCostTypeItem : " + e.getMessage());
-	        mav.addObject("resCode", "failure");
-	        mav.addObject("resMsg", "처리 중 오류가 발생하였습니다.");
-	        return mav;
+	@PostMapping
+	    public ResponseEntity<Object> saveCostTypeItem(@RequestBody KccgMap paramMap, HttpServletRequest request) {
+	        HttpSession session = request.getSession();
+	        KccgMap userInfo = (KccgMap) session.getAttribute("kccgErpUserMap");
+	
+	        if (userInfo == null) {
+	            return ResponseEntity.badRequest().body(createErrorResponse("사용자 정보를 찾을 수 없습니다."));
+	        }
+	
+	        List<KccgMap> list = (List<KccgMap>) paramMap.get("dsCostTypeList");
+	
+	        try {
+	            KccgMap resultMap = service.saveCostTypeItem(list);
+	            return ResponseEntity.ok().body(resultMap);
+	        } catch (RuntimeException e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(createErrorResponse("처리 중 오류가 발생하였습니다."));
+	        }
 	    }
-	}
 	
 	private ModelAndView createJsonModelAndView() {
         return new ModelAndView("jsonView");
