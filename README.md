@@ -7,5 +7,3 @@
 2. M0702_MngClsfAgmtCrtrSvc.java
 3. M0702_MngClsfAgmtCrtrDAO.java
 4. M0702_MngClsfAgmtCrtrMapper.xml
-5. M0702_MngClsfAgmtCrtrWsq.xml
-6. m0702_ctitem_P.xml
