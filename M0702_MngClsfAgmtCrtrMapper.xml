@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kccworld.kccg.manufacture.dao.M0702_MngClsfAgmtCrtrDAO">
+	<select id="selectItemListCount" parameterType="KccgMap" resultType="Integer">
+	    /* M0702_MngClsfAgmtCtrlDAO  : selectItemListCount */
+	    SELECT  COUNT(1) AS CNT
+		  FROM  XKAC_LOOKUP_MANAGER     XL2,
+		        XKAC_LOOKUP_MANAGER     XL1,
+		        XMRPG_MA_CLASS_CODE     XC4,
+		        XMRPG_MA_CLASS_CODE     XC3,
+		        XMRPG_MA_CLASS_CODE     XC2,
+		        XMRPG_MA_CLASS_CODE     XC1,
+		        XMRPG_MA_COST_TYPE      XCT
+		 WHERE  XCT.ORGANIZATION_ID  =  122
+		   AND  XCT.PRODUCT_GROUP    =  NVL(#{productGroup},XCT.PRODUCT_GROUP)
+		   AND  XCT.CLASS_CODE1      =  NVL(#{classCode1},XCT.CLASS_CODE1)
+		   AND  XCT.CLASS_CODE2      =  NVL(#{classCode2},XCT.CLASS_CODE2)
+		   AND  XCT.CLASS_CODE3      =  NVL(#{classCode3},XCT.CLASS_CODE3)
+		   AND  XCT.CLASS_CODE4      =  NVL(#{classCode4},XCT.CLASS_CODE4)
+		   AND  XCT.COST_TYPE        =  NVL(#{costtype},XCT.COST_TYPE)
+		   AND  XC1.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC1.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC1.CLASS_TYPE       =  'PG01'
+		   AND  XC1.CLASS_CODE       =  XCT.CLASS_CODE1
+		   AND  XC2.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC2.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC2.CLASS_TYPE       =  'PG02'
+		   AND  XC2.CLASS_CODE       =  XCT.CLASS_CODE2
+		   AND  XC3.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC3.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC3.CLASS_TYPE       =  'PG03'
+		   AND  XC3.CLASS_CODE       =  XCT.CLASS_CODE3
+		   AND  XC4.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC4.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC4.CLASS_TYPE       =  'PG04'
+		   AND  XC4.CLASS_CODE       =  XCT.CLASS_CODE4
+		   AND  XL1.LOOKUP_FLAG      =  'LINES'
+		   AND  XL1.LOOKUP_TYPE      =  'XMDM_COST_TYPE'
+		   AND  XL1.LOOKUP_CODE      =  XCT.COST_TYPE
+		   <if test="costname != null and costname != ''">
+		   AND  XL1.MEANING       LIKE  '%'||#{costname}||'%'
+		   </if>
+		   AND  XL2.LOOKUP_FLAG      =  'LINES'
+		   AND  XL2.LOOKUP_TYPE      =  'XMRP_MA_PRODUCT_GROUP'
+		   AND  XL2.LOOKUP_CODE      =  XCT.PRODUCT_GROUP
+    </select>
+    
+    <select id="selectItemList" resultType="kccgMap">
+	    /* M0702_MngClsfAgmtCtrlDAO  : selectItemList */
+	    SELECT  XCT.COST_TYPE           COST_TYPE,           -- 원가유형
+		        XL1.MEANING             COST_TYPE_NAME,      -- 원가유형명
+		        XCT.PRODUCT_GROUP       PRODUCT_GROUP,       -- 제품구분
+		        XL2.MEANING             PRODUCT_GROUP_NAME,  -- 제품구분명
+		        XCT.CLASS_CODE1         CLASS_CODE1,         -- 제품군1
+		        XC1.CLASS_NAME          CLASS_CODE1_NAME,    -- 제품군1명
+		        XCT.CLASS_CODE2         CLASS_CODE2,         -- 제품군2
+		        XC2.CLASS_NAME          CLASS_CODE2_NAME,    -- 제품군2명
+		        XCT.CLASS_CODE3         CLASS_CODE3,         -- 제품군3
+		        XC3.CLASS_NAME          CLASS_CODE3_NAME,    -- 제품군3명
+		        XCT.CLASS_CODE4         CLASS_CODE4,         -- 제품군4
+		        XC4.CLASS_NAME          CLASS_CODE4_NAME,    -- 제품군4명
+		        XCT.SORT_SEQ            SORT_SEQ,            -- 정렬순서
+		        XCT.ENABLED_FLAG        ENABLED_FLAG         -- 사용여부
+		  FROM  XKAC_LOOKUP_MANAGER     XL2,
+		        XKAC_LOOKUP_MANAGER     XL1,
+		        XMRPG_MA_CLASS_CODE     XC4,
+		        XMRPG_MA_CLASS_CODE     XC3,
+		        XMRPG_MA_CLASS_CODE     XC2,
+		        XMRPG_MA_CLASS_CODE     XC1,
+		        XMRPG_MA_COST_TYPE      XCT
+		 WHERE  XCT.ORGANIZATION_ID  =  122
+		   AND  XCT.PRODUCT_GROUP    =  NVL(#{productGroup},XCT.PRODUCT_GROUP)
+		   AND  XCT.CLASS_CODE1      =  NVL(#{classCode1},XCT.CLASS_CODE1)
+		   AND  XCT.CLASS_CODE2      =  NVL(#{classCode2},XCT.CLASS_CODE2)
+		   AND  XCT.CLASS_CODE3      =  NVL(#{classCode3},XCT.CLASS_CODE3)
+		   AND  XCT.CLASS_CODE4      =  NVL(#{classCode4},XCT.CLASS_CODE4)
+		   AND  XCT.COST_TYPE        =  NVL(#{costtype},XCT.COST_TYPE)
+		   AND  XC1.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC1.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC1.CLASS_TYPE       =  'PG01'
+		   AND  XC1.CLASS_CODE       =  XCT.CLASS_CODE1
+		   AND  XC2.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC2.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC2.CLASS_TYPE       =  'PG02'
+		   AND  XC2.CLASS_CODE       =  XCT.CLASS_CODE2
+		   AND  XC3.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC3.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC3.CLASS_TYPE       =  'PG03'
+		   AND  XC3.CLASS_CODE       =  XCT.CLASS_CODE3
+		   AND  XC4.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC4.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC4.CLASS_TYPE       =  'PG04'
+		   AND  XC4.CLASS_CODE       =  XCT.CLASS_CODE4
+		   AND  XL1.LOOKUP_FLAG      =  'LINES'
+		   AND  XL1.LOOKUP_TYPE      =  'XMDM_COST_TYPE'
+		   AND  XL1.LOOKUP_CODE      =  XCT.COST_TYPE
+		   <if test="costname != null and costname != ''">
+		   AND  XL1.MEANING       LIKE  '%'||#{costname}||'%'
+		   </if>
+		   AND  XL2.LOOKUP_FLAG      =  'LINES'
+		   AND  XL2.LOOKUP_TYPE      =  'XMRP_MA_PRODUCT_GROUP'
+		   AND  XL2.LOOKUP_CODE      =  XCT.PRODUCT_GROUP
+		 ORDER  BY  XCT.COST_TYPE
+    </select>
+    
+    <select id="selectPrdtGrpList" resultType="kccgMap">
+	    /* M0702_MngClsfAgmtCtrlDAO  : selectPrdtGrpList */
+		SELECT  XLM.LOOKUP_CODE      PRODUCT_GROUP,
+		        XLM.MEANING          PRODUCT_NAME
+		  FROM  XKAC_LOOKUP_MANAGER  XLM
+		 WHERE  XLM.LOOKUP_FLAG   =  'LINES'
+		   AND  XLM.LOOKUP_TYPE   =  'XMRP_MA_PRODUCT_GROUP'
+		 ORDER  BY  XLM.ORDER_BY
+    </select>
+    
+    <select id="selectCostTypeList" resultType="kccgMap">
+   		 /* M0702_MngClsfAgmtCtrlDAO  : selectCostTypeList */
+    	SELECT  XLM.LOOKUP_CODE      COST_TYPE,
+		        XLM.DESCRIPTION      COST_TYPE_NAME
+		  FROM  XKAC_LOOKUP_MANAGER  XLM
+		 WHERE  XLM.LOOKUP_FLAG   =  'LINES'
+		   AND  XLM.LOOKUP_TYPE   =  'XMDM_COST_TYPE'
+		   AND  XLM.ATTRIBUTE1    =  'A28'
+		   AND  XLM.ENABLED_FLAG  =  'Y'
+		 ORDER  BY  XLM.LOOKUP_CODE
+    </select>
+    
+    <select id="selectCostTypePopupListCount" parameterType="KccgMap" resultType="Integer">
+	    /* M0702_MngClsfAgmtCtrlDAO  : selectCostTypePopupListCount */
+		SELECT  COUNT(1) CNT
+		  FROM  XKAC_LOOKUP_MANAGER     XL2,
+		        XKAC_LOOKUP_MANAGER     XL1,
+		        XMRPG_MA_CLASS_CODE     XC4,
+		        XMRPG_MA_CLASS_CODE     XC3,
+		        XMRPG_MA_CLASS_CODE     XC2,
+		        XMRPG_MA_CLASS_CODE     XC1,
+		        XMRPG_MA_COST_TYPE      XCT
+		 WHERE  XCT.ORGANIZATION_ID  =  122
+		   AND  XC1.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC1.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC1.CLASS_TYPE       =  'PG01'
+		   AND  XC1.CLASS_CODE       =  XCT.CLASS_CODE1
+		   AND  XC2.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC2.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC2.CLASS_TYPE       =  'PG02'
+		   AND  XC2.CLASS_CODE       =  XCT.CLASS_CODE2
+		   AND  XC3.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC3.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC3.CLASS_TYPE       =  'PG03'
+		   AND  XC3.CLASS_CODE       =  XCT.CLASS_CODE3
+		   AND  XC4.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC4.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC4.CLASS_TYPE       =  'PG04'
+		   AND  XC4.CLASS_CODE       =  XCT.CLASS_CODE4
+		   AND  XL1.LOOKUP_FLAG      =  'LINES'
+		   AND  XL1.LOOKUP_TYPE      =  'XMDM_COST_TYPE'
+		   AND  XL1.LOOKUP_CODE      =  XCT.COST_TYPE
+		   AND  XL2.LOOKUP_FLAG      =  'LINES'
+		   AND  XL2.LOOKUP_TYPE      =  'XMRP_MA_PRODUCT_GROUP'
+		   AND  XL2.LOOKUP_CODE      =  XCT.PRODUCT_GROUP
+		   <if test="itemSearchDesc != null and itemSearchDesc != ''">
+		   AND  XCT.COST_TYPE   = #{itemSearchDesc}
+		   </if>
+    </select>
+    
+    <select id="selectCostTypePopupList" resultType="kccgMap">
+	    /* M0702_MngClsfAgmtCtrlDAO  : selectCostTypePopupList */
+	    SELECT  XCT.COST_TYPE           COST_TYPE,           -- 원가유형
+		        XL1.MEANING             COST_TYPE_NAME,      -- 원가유형명
+		        XCT.PRODUCT_GROUP       PRODUCT_GROUP,       -- 제품구분
+		        XL2.MEANING             PRODUCT_GROUP_NAME,  -- 제품구분명
+		        XCT.CLASS_CODE1         CLASS_CODE1,         -- 제품군1
+		        XC1.CLASS_NAME          CLASS_CODE1_NAME,    -- 제품군1명
+		        XCT.CLASS_CODE2         CLASS_CODE2,         -- 제품군2
+		        XC2.CLASS_NAME          CLASS_CODE2_NAME,    -- 제품군2명
+		        XCT.CLASS_CODE3         CLASS_CODE3,         -- 제품군3
+		        XC3.CLASS_NAME          CLASS_CODE3_NAME,    -- 제품군3명
+		        XCT.CLASS_CODE4         CLASS_CODE4,         -- 제품군4
+		        XC4.CLASS_NAME          CLASS_CODE4_NAME,    -- 제품군4명
+		        XCT.SORT_SEQ            SORT_SEQ,            -- 정렬순서
+		        XCT.ENABLED_FLAG        ENABLED_FLAG         -- 사용여부
+		  FROM  XKAC_LOOKUP_MANAGER     XL2,
+		        XKAC_LOOKUP_MANAGER     XL1,
+		        XMRPG_MA_CLASS_CODE     XC4,
+		        XMRPG_MA_CLASS_CODE     XC3,
+		        XMRPG_MA_CLASS_CODE     XC2,
+		        XMRPG_MA_CLASS_CODE     XC1,
+		        XMRPG_MA_COST_TYPE      XCT
+		 WHERE  XCT.ORGANIZATION_ID  =  122
+		   AND  XC1.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC1.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC1.CLASS_TYPE       =  'PG01'
+		   AND  XC1.CLASS_CODE       =  XCT.CLASS_CODE1
+		   AND  XC2.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC2.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC2.CLASS_TYPE       =  'PG02'
+		   AND  XC2.CLASS_CODE       =  XCT.CLASS_CODE2
+		   AND  XC3.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC3.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC3.CLASS_TYPE       =  'PG03'
+		   AND  XC3.CLASS_CODE       =  XCT.CLASS_CODE3
+		   AND  XC4.ORGANIZATION_ID  =  XCT.ORGANIZATION_ID
+		   AND  XC4.PRODUCT_GROUP    =  XCT.PRODUCT_GROUP
+		   AND  XC4.CLASS_TYPE       =  'PG04'
+		   AND  XC4.CLASS_CODE       =  XCT.CLASS_CODE4
+		   AND  XL1.LOOKUP_FLAG      =  'LINES'
+		   AND  XL1.LOOKUP_TYPE      =  'XMDM_COST_TYPE'
+		   AND  XL1.LOOKUP_CODE      =  XCT.COST_TYPE
+		   AND  XL2.LOOKUP_FLAG      =  'LINES'
+		   AND  XL2.LOOKUP_TYPE      =  'XMRP_MA_PRODUCT_GROUP'
+		   AND  XL2.LOOKUP_CODE      =  XCT.PRODUCT_GROUP
+		   <if test="itemSearchDesc != null and itemSearchDesc != ''">
+		   AND  XCT.COST_TYPE   = #{itemSearchDesc}
+		   </if>
+		 ORDER  BY  XCT.COST_TYPE
+    </select>
+    
+    <select id="selectClassCd1List" resultType="kccgMap">
+    	/* M0702_MngClsfAgmtCtrlDAO : selectClassCd1List */
+    	SELECT  XCC.CLASS_CODE          CLASS_CODE1,      -- 제품군1코드
+		        XCC.CLASS_NAME          CLASS_CODE1_NAME  -- 제품군1코드명
+		  FROM  XMRPG_MA_CLASS_CODE     XCC
+		 WHERE  XCC.ORGANIZATION_ID  =  122
+		   AND  XCC.PRODUCT_GROUP    =  NVL(#{productGroup},XCC.PRODUCT_GROUP)
+		   AND  XCC.CLASS_TYPE       =  'PG01'
+		 ORDER  BY  XCC.SORT_SEQ, XCC.CLASS_CODE
+    </select>
+    
+    <select id="selectClassCd2List" resultType="kccgMap">
+    	/* M0702_MngClsfAgmtCtrlDAO : selectClassCd2List */
+    	SELECT  XCC.CLASS_CODE          CLASS_CODE2,      -- 제품군2코드
+		        XCC.CLASS_NAME          CLASS_CODE2_NAME  -- 제품군2코드명
+		  FROM  XMRPG_MA_CLASS_CODE     XCC
+		 WHERE  XCC.ORGANIZATION_ID  =  122
+		   AND  XCC.PRODUCT_GROUP    =  NVL(#{productGroup},XCC.PRODUCT_GROUP)
+		   AND  XCC.CLASS_TYPE       =  'PG02'
+		 ORDER  BY  XCC.SORT_SEQ, XCC.CLASS_CODE
+    </select>
+    
+    <select id="selectClassCd3List" resultType="kccgMap">
+    	/* M0702_MngClsfAgmtCtrlDAO : selectClassCd3List */
+    	SELECT  XCC.CLASS_CODE          CLASS_CODE3,      -- 제품군3코드
+		        XCC.CLASS_NAME          CLASS_CODE3_NAME  -- 제품군3코드명
+		  FROM  XMRPG_MA_CLASS_CODE     XCC
+		 WHERE  XCC.ORGANIZATION_ID  =  122
+		   AND  XCC.PRODUCT_GROUP    =  NVL(#{productGroup},XCC.PRODUCT_GROUP)
+		   AND  XCC.CLASS_TYPE       =  'PG03'
+		 ORDER  BY  XCC.SORT_SEQ, XCC.CLASS_CODE
+    </select>
+    
+    <select id="selectClassCd4List" resultType="kccgMap">
+    	/* M0702_MngClsfAgmtCtrlDAO : selectClassCd4List */
+    	SELECT  XCC.CLASS_CODE          CLASS_CODE4,      -- 제품군4코드
+		        XCC.CLASS_NAME          CLASS_CODE4_NAME  -- 제품군4코드명
+		  FROM  XMRPG_MA_CLASS_CODE     XCC
+		 WHERE  XCC.ORGANIZATION_ID  =  122
+		   AND  XCC.PRODUCT_GROUP    =  NVL(#{productGroup},XCC.PRODUCT_GROUP)
+		   AND  XCC.CLASS_TYPE       =  'PG04'
+		 ORDER  BY  XCC.SORT_SEQ, XCC.CLASS_CODE
+    </select>
+    
+    <insert id="insertCostTypeItem" parameterType="KccgMap">
+	/* M0702_MngClsfAgmtCtrlDAO : insertCostTypeItem */
+	</insert>
+    
+</mapper>
