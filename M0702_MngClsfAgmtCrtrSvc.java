@@ -84,8 +84,29 @@ public class M0702_MngClsfAgmtCrtrSvc {
     
     public KccgMap saveCostTypeItem(List<KccgMap> list) {
         KccgMap resultMap = new KccgMap();
+
         try {
+            // resultMap에 "userInfo"가 있는지 확인하고 없으면 빈 KccgMap을 생성하여 대입
+            KccgMap userInfoMap = resultMap.get("userInfo") == null ? new KccgMap() : (KccgMap) resultMap.get("userInfo");
+
+            // userInfoMap이 비어있지 않다면 "empCode"를 infoMap에 추가
+            KccgMap infoMap = new KccgMap();
+            if (userInfoMap.size() != 0) {
+                infoMap.put("empCode", userInfoMap.get("empCode"));
+            }
+
+            // organizationId를 infoMap에 추가
+            infoMap.put("organizationId", 122);
+
+            // 리스트의 각 요소에 대해 dao의 insertCostTypeItem 메서드를 호출
             list.forEach(dao::insertCostTypeItem);
+
+            // callableParam 초기화 및 값 할당
+            KccgMap callableParam = new KccgMap();
+            callableParam.put("infoMap", infoMap);
+            callableParam.put("lReturnStatus", "");
+            callableParam.put("lErrorMessage", "");
+
         } catch (Exception e) {
             logger.error("saveCostTypeItem Error: ", e);
             throw new RuntimeException("처리 중 오류가 발생하였습니다.");
